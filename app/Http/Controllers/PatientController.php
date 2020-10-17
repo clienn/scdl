@@ -15,7 +15,12 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = Patient::select("patients.*")->paginate(10);
+        // $patients = Patient::select("patients.*")->paginate(10);
+        $patients = Patient::select('patients.id', 'patients.lastname', 'patients.firstname', 
+            'patients.middlename', 'patients.gender', 'patients.birthdate', 'companies.name')
+            ->leftjoin('companies', 'companies.id', '=', 'patients.company_id')
+            ->orderBy('patients.lastname')->paginate(10);
+            
         // echo "<pre>";
         // print_r($patients);
         // echo "</pre>";

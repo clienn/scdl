@@ -11,7 +11,8 @@
     $(document).ready(function() {
         $('.datepicker').datepicker({
             dateFormat: 'yy-mm-dd',
-            changeYear: true
+            changeYear: true,
+            yearRange: "-100:+0"
         });
 
         let str = '{{\Request::path()}}';

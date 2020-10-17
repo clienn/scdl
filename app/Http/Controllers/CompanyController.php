@@ -95,13 +95,16 @@ class CompanyController extends Controller
         if ($company->save()) {
             $company_packages = [];
 
-            foreach ($packages as $package) {
-                $company_packages[] = [
-                    'user_id' => Auth::id(),
-                    'company_id' => $company->id,
-                    'package_id' => $package
-                ];
+            if (is_array($packages)) {
+                foreach ($packages as $package) {
+                    $company_packages[] = [
+                        'user_id' => Auth::id(),
+                        'company_id' => $company->id,
+                        'package_id' => $package
+                    ];
+                }
             }
+            
             
             if ($request->isMethod('put')) {
                 CompanyPackage::where('company_id', $company->id)->delete();

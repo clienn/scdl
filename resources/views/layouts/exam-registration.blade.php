@@ -1,9 +1,5 @@
 @extends('layouts.base')
 
-@section('search-bar')
-    @include('partials.search-bar')
-@stop
-
 @section('db-content')
 <div class="d-flex justify-content-md-center align-items-center h-100 mt-5 mb-5">
     <div class="container-fluid font-regular form-wrap">

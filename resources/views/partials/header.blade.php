@@ -10,7 +10,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('.datepicker').datepicker({
-            dateFormat: 'yy-mm-dd'
+            dateFormat: 'yy-mm-dd',
+            changeYear: true
         });
 
         let str = '{{\Request::path()}}';

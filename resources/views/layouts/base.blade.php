@@ -57,6 +57,11 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12 flex-column d-flex align-items-center mt-2">
+                            <a href="/exam/0/registration"><span class="mt-3 font-10 font-lime menu-2" data="1">Create Exam</span></a>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12 flex-column d-flex align-items-center mt-1 menu-2" data="2">
                             <span class="mt-3 font-10 font-lime">Reports</span>
                         </div>

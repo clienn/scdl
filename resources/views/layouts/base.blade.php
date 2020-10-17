@@ -52,12 +52,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 flex-column d-flex align-items-center mt-1 menu-2" data="1">
-                            <span class="mt-3 font-10 font-lime">Reports</span>
+                        <div class="col-md-12 flex-column d-flex align-items-center mt-2">
+                            <a href="/package/0/registration"><span class="mt-3 font-10 font-lime menu-2" data="1">Create Package</span></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 flex-column d-flex align-items-center mt-1 menu-2" data="2">
+                            <span class="mt-3 font-10 font-lime">Reports</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 flex-column d-flex align-items-center mt-1 menu-2" data="3">
                             <span class="mt-3 font-10 font-lime">About</span>
                         </div>
                     </div>

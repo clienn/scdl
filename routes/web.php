@@ -27,9 +27,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('layouts.dashboard');
     });
-    Route::get('/results', function () {
-        return view('layouts.results');
-    });
+
+    // Route::get('/results', function () {
+    //     return view('layouts.results');
+    // });
+
+    Route::get('/results', 'ResultController@index');
+    Route::get('/result/list', 'ResultController@list');
 
     Route::get('/user/{id}/registration', 'UserController@registration');
     Route::get('/user/list', 'UserController@index');

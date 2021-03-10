@@ -46,7 +46,7 @@
                     <div class="row mt-3"></div>
 
                     @foreach($tibc_ferritin as $item)
-                    <div class="row mt-2">
+                    <div class="row mt-2 tresults">
                         <div class="col-md-4">
                             <span class="font-15 font-black-2">{{ $item[0] }}</span>
                         </div>
@@ -77,8 +77,11 @@
             </div>
       </div>
       <div class="modal-footer">
-            <button type="submit" class="btn form-btn-3 font-black-1">
+            <!-- <button type="submit" class="btn form-btn-3 font-black-1">
                 <span class="font-15">Close</span>
+            </button> -->
+            <button type="button" class="btn form-btn-5 font-black-1" data-toggle="modal" data-target="#print-results">
+                <span class="font-10">Preview</span>
             </button>
             <button type="submit" class="btn form-btn-2 bg-lime-1">
                 <span class="svg-plus">@include('svg.save-icon')</span>

@@ -33,7 +33,9 @@ Route::middleware(['auth'])->group(function () {
     // });
 
     Route::get('/results', 'ResultController@index');
+    Route::get('/patient/{id}/results', 'ResultController@getPatientResults');
     Route::get('/result/list', 'ResultController@list');
+    Route::post('/result/save', 'ResultController@store');
 
     Route::get('/user/{id}/registration', 'UserController@registration');
     Route::get('/user/list', 'UserController@index');
@@ -52,6 +54,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/exam/{id}/registration', 'ExamController@registration');
     Route::get('/exam/list', 'ExamController@index');
+    Route::get('/exam_type/list', 'ExamController@examType');
+    Route::get('/exam_type/list/search', 'ExamController@getExamTypes');
+    Route::get('/exam_type/{id}/registration', 'ExamController@examTypeRegistration');
+    Route::get('/exam/type/list', 'ExamController@getExamTypeList');
+    Route::get('/exam/type/search', 'ExamController@searchExamType');
 
     Route::get('/package/{id}/registration', 'PackageController@registration');
     Route::get('/package/list', 'PackageController@index');
@@ -81,6 +88,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/exam/save', 'ExamController@store');
     Route::put('/exam/save', 'ExamController@store');
 
+    Route::post('/exam_type/save', 'ExamController@storeExamType');
+    Route::put('/exam_type/save', 'ExamController@storeExamType');
+    Route::get('/exam_type/{id}/delete', 'ExamController@delete');
+
     Route::post('/package/save', 'PackageController@store');
     Route::put('/package/save', 'PackageController@store');
+
+    Route::get('/test/form', 'ResultController@getForm');
+    Route::get('/test', 'ResultController@test');
 });

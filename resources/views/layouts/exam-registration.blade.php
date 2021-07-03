@@ -31,13 +31,11 @@
                                 <input type="text" name="name" class="form-control-1 form-rounded form-input-1 font-16" placeholder="Exam Name" value="{{ count($exam) ? $exam[0]->name : '' }}">
                             </div>
                             <div class="col-md-4">
-                                <select name="exam_category_id" class="form-control-1 form-rounded form-select-1 font-16">
-                                    <option hidden><span class="font-gray-3">Exam Category</span></option>
-                                    <option value="1">Category 1</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ count($exam) && $exam[0]->exam_category_id == $category->id ? 'selected' : ''}}>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>    
+                                <!-- <select name="package_id" class="form-control-1 form-rounded form-select-1 font-16">
+                                    <option hidden><span class="font-gray-3">Add to package</span></option>
+                                    <option value="1">Package 1</option>
+                                    
+                                </select> -->  
                             </div>
                         </div>
 
@@ -46,15 +44,39 @@
                                 <input type="text" name="price" class="form-control-1 form-rounded form-input-1 font-16" placeholder="Exam Price" value="{{ count($exam) ? $exam[0]->price : '' }}">
                             </div>
                             <div class="col-md-4">
-                                <select name="package_id" class="form-control-1 form-rounded form-select-1 font-16">
-                                    <option hidden><span class="font-gray-3">Add to package</span></option>
-                                    <option value="1">Package 1</option>
-                                    
-                                </select>    
+                                
+                                <button type="button" class="btn form-btn-2 bg-lime-1" data-toggle="modal" data-target="#examTypeModal">
+                                    <span class="svg-plus">@include('svg.plus')</span>
+                                    <span class="font-15">Add Exam Type Item</span>
+                                </button>     
                             </div>
                         </div>
                         
                     </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <table id="tbl-exams-types" class="table tb-style-1 table-hover mt-5">
+                        <thead>
+                            <tr class="font-lime font-bold">
+                                <th scope="col">&nbsp;</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-10">
+                            @foreach($exam_types as $exam_type)
+                                <tr>
+                                    <td scope="row" style="width:10%;"><input type="checkbox" name="exams[]" value="{{ $exam_type->id }}" checked /></td>
+                                    <td>{{ $exam_type->description }}</td>
+                                    <td>...</td>
+                                    <!-- <td>...</td> -->
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -63,4 +85,20 @@
         </form>
     </div>
 </div>
+
+@include('modals.exam-type-list')
+
+<script type="text/javascript" src="{{asset('js/main.js')}}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        initAddItems('tbl-exams-types', 'exam-type-list-modal', 'examTypeModal', 'exam-type-list-pagination', 
+            '/exam/type/list', "{{ URL::to('/') }}", checkSelectedExams, null);
+
+        initAjaxPagination('exam-type-list-pagination', 'exam-type-list-modal', "{{ URL::to('/') }}", '/exam/type/search', 'exam-type-search', callback);
+    });
+
+    function callback() {
+        checkSelectedExams('tbl-exams-types', 'tbl-exam-types-modal');
+    }
+</script>
 @stop

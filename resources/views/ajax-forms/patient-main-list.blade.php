@@ -21,6 +21,7 @@
                 <td>{{ $patient->birthdate }}</td>
                 <td>
                     <a href="/patient/{{ $patient->id }}/registration">Update</a> | 
+                    <a href="/patient/{{ $patient->id }}/results">Results</a> | 
                     <a href="/doctor/form/{{ $patient->id }}/0">Form</a>
                 </td>
             </tr>

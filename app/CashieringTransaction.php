@@ -22,6 +22,7 @@ class CashieringTransaction extends Model
         'tendered',
         'change_due',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status'
     ];
 }

@@ -1,24 +1,19 @@
 @extends('layouts.base')
 
-@section('search-bar')
-    @include('partials.search-bar')
-@stop
-
 @section('db-content')
 <div class="d-flex justify-content-md-center">
     <div class="container-fluid font-regular form-wrap-2 ml-2" style="z-index:999;">
+        <div class="row">
+            <div class="col-md-11 flex-column d-flex pull-right mr-2">
+                <h1 class="font-regular font-16 text-right"><a href="/patient/list">Patient List</a></h1>
+            </div>
+        </div>
         <div role="tabpanel">
             <!-- Nav tabs -->
             <ul class="result-list-nav nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="#activeTab" aria-controls="activeTab" role="tab" data-toggle="tab">Active / Pending</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#completedTab" aria-controls="completedTab" role="tab" data-toggle="tab">Completed (Daily)</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#archiveTab" aria-controls="archiveTab" role="tab" data-toggle="tab">Archive</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#activeTab" aria-controls="activeTab" role="tab" data-toggle="tab">Patient Test Archive</a>
+                </li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -26,12 +21,6 @@
                     <div class="container-fluid">
                         @include('ajax-forms.result-main-list')
                     </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="completedTab">
-                    @include('ajax-forms.result-completed-list')
-                </div>
-                <div role="tabpanel" class="tab-pane" id="archiveTab">
-                    @include('ajax-forms.result-archive-list')
                 </div>
             </div>
         </div>
@@ -61,10 +50,6 @@
                         <button type="submit" id="btn-print-results" class="btn form-btn-1 bg-lime-1" data-toggle="modal" data-target="#print-results">
                             <span class="svg-plus">@include('svg.print-icon')</span>
                             <span class="font-15">Print</span>
-                        </button>
-                        <button type="submit" id="btn-save-results" class="btn form-btn-1 bg-lime-1">
-                            <span class="svg-plus">@include('svg.save-icon')</span>
-                            <span class="font-15">Save</span>
                         </button>
                     </div>
                 </div>
@@ -114,33 +99,6 @@
 
         
     </div>
-
-    <!-- <div class="container font-regular">
-    
-        <div class="row mt-3">
-            <div class="col-md-12 flex-column d-flex align-items-center mt-1 text-center font-8">
-                <button type="button" class="testmodal btn form-btn-2 bg-lime-1" data-toggle="modal" data-target="#bloodChemExecutiveModal">
-                    <span class="font-15">Blood Chem Executive</span>
-                </button>  
-
-                <button type="button" class="testmodal btn form-btn-2 bg-lime-1 mt-2" data-toggle="modal" data-target="#bloodChemFullModal">
-                    <span class="font-15">Blood Chem Full</span>
-                </button> 
-
-                <button type="button" class="testmodal btn form-btn-2 bg-lime-1 mt-2" data-toggle="modal" data-target="#bloodChemStandardModal">
-                    <span class="font-15">Blood Chem Standard</span>
-                </button> 
-
-                <button type="button" class="testmodal btn form-btn-2 bg-lime-1 mt-2" data-toggle="modal" data-target="#bloodChemModal">
-                    <span class="font-15">Blood Chem</span>
-                </button> 
-                
-                <button type="button" class="testmodal btn form-btn-2 bg-lime-1 mt-2" data-toggle="modal" data-target="#tibcFerritinModal">
-                    <span class="font-15">TIBC and Ferritin</span>
-                </button> 
-            </div>
-        </div>
-    </div> -->
 </div>
 
 <script type="text/javascript">
@@ -175,11 +133,6 @@
             $(this).addClass('curr');
             $(this).addClass('border-lime-2');
             $(this).addClass('rborder-white-3');
-
-            // let e_results = $('#tbl-results-list tbody tr.curr input').val();
-            // g_exam_results = e_results ? JSON.parse($('#tbl-results-list tbody tr.curr input').val()) : '';
-            // g_patient_name = $('#tbl-results-list tbody tr.curr td:eq(1)').html();
-            // g_txn_date = $('#tbl-results-list tbody tr.curr td:eq(3)').html();
 
             let e_results = $('input', this).val();
             g_exam_results = e_results ? JSON.parse($('input', this).val()) : '';
@@ -274,83 +227,6 @@
             });
         });
 
-        $('#btn-save-results').click(function() {
-            let str = $('select[name="tests"]').val();
-            let id = parseInt($('.tbl-results tbody tr.curr td:eq(0)').html());
-
-            let data = {};
-            data[str] = {};
-
-            // if (str[0] == 'p') {
-            //     console.log()
-            // }
-
-            $('.exam-input').each(function() {
-                let exam_id = $(this).attr('data-id');
-                let value = $(this).val();
-                
-                if (str[0] == 'p') {
-                    let e_id = $(this).parents('div.exam_type').attr('data-id');
-                    if (!data[str][e_id]) {
-                        data[str][e_id] = {};
-                    }
-                    data[str][e_id][exam_id] = value;
-                } else {
-                    data[str][exam_id] = value;
-                }
-            });
-
-            // console.log(data);
-
-            let fd = new FormData();
-            fd.append('id', id);
-            fd.append('results', JSON.stringify(data));
-            fd.append('exam_type', str);
-
-            $.ajax({
-                url: '/result/save',
-                type: 'post',
-                data: fd,
-                contentType: false,
-                processData: false,
-                success: function(response){
-                    if (response.success) {
-                        g_exam_results = JSON.parse(response.data);
-                        let status = response.status;
-                        
-                        let row = $('table tbody tr.curr');
-
-                        row.find('input').val(response.data);
-  
-                        if (status == 1) {
-                            row.find('td:eq(2)').html('<span class="font-blue-1 font-bold">Active</span>');
-                        } else if (status == 2) {
-                            row.find('td:eq(2)').html('<span class="font-lime font-bold">Complete</span>');
-
-                            if (row.parents('table#tbl-results-completed')) {
-                                // let html = '<tr>' + row.html() + '</tr>';
-                                $('#tbl-results-completed').prepend(row.clone());
-
-                                let r = $('#tbl-results-completed tbody tr:eq(0)');
-                                r.removeClass('border-lime-2');
-                                r.removeClass('rborder-white-3');
-                                r.removeClass('curr');
-                            }
-                        }   
-
-                        $('.alert-success').fadeIn(1000, () => {
-                            $('.alert-success').fadeOut(5000);
-                        });
-                    } else {
-                        $('.alert-warning').fadeIn(1000, () => {
-                            $('.alert-warning').fadeOut(5000);
-                        });
-                    }
-                },
-                
-            });
-        });
-
         $('#print-results').on('show.bs.modal', function (event) {
             let html = '';
             let count = 0;
@@ -404,27 +280,29 @@
             } else {
                 result = (g_exam_results && g_exam_results[key]) ? g_exam_results[key][data[k].id] : '';
             }
+
+            html += '<div class="col-md-4 text-center mt-1"><input type="text" data-id="' + data[k].id + '" class="exam-input form-rounded form-input-2 font-10 autocomplete="off" value="' + result + '" readonly></div>';
             
-            if (data[k].type == 0) {
-                html += '<div class="col-md-4 text-center mt-1"><input type="text" data-id="' + data[k].id + '" class="exam-input form-rounded form-input-2 font-10 autocomplete="off" value="' + result + '"></div>';
-            } else if (data[k].type == 1) {
-                let choices = data[k].choices ? data[k].choices.split(',') : '';
-                html += '<div class="col-md-4 text-center mt-1"><select data-id="' + data[k].id + '" class="exam-input form-control-1 form-rounded form-select-2 font-10">';
-                for (var i in choices) {
-                    let sel = '';
-                    if (result == choices[i]) {
-                        sel = ' selected';
-                    }
-                    html += '<option value="' + choices[i] + '"' + sel + '>' + choices[i] + '</option>'
-                }
-                html += '</select></div>';
-            }
-           html += '</div>';
+            // if (data[k].type == 0) {
+            //     html += '<div class="col-md-4 text-center mt-1"><input type="text" data-id="' + data[k].id + '" class="exam-input form-rounded form-input-2 font-10 autocomplete="off" value="' + result + '" readonly></div>';
+            // } else if (data[k].type == 1) {
+            //     let choices = data[k].choices ? data[k].choices.split(',') : '';
+            //     html += '<div class="col-md-4 text-center mt-1"><select data-id="' + data[k].id + '" class="exam-input form-control-1 form-rounded form-select-2 font-10" readonly>';
+            //     for (var i in choices) {
+            //         let sel = '';
+            //         if (result == choices[i]) {
+            //             sel = ' selected';
+            //         }
+            //         html += '<option value="' + choices[i] + '"' + sel + '>' + choices[i] + '</option>'
+            //     }
+            //     html += '</select></div>';
+            // }
+            html += '</div>';
         }
 
         html += '<div class="row mt-2">';
-        html += '<div class="col-md-6 text-center"><select name="mt" class="form-control-1 form-rounded form-select-2 font-12"><option value="0">Medical Technologist</option></select></div>'
-        html += '<div class="col-md-6 text-center"><select name="pathologist" class="form-control-1 form-rounded form-select-2 font-12"><option value="0">Pathologist</option></select></div>'
+        html += '<div class="col-md-6 text-center"><span>Medical Technologist</span></div>'
+        html += '<div class="col-md-6 text-center"><span>Pathologist</span></div>'
         html += '</div>';
 
         return html;

@@ -21,14 +21,14 @@
             </div>
             <div class="row mt-5 font-10">
                 <div class="col-md-2">
-                    <span>Patient ID:</span>
+                    <span class="font-bold">Patient ID:</span>
                 </div>
                 <div class="col-md-3">
                     <span>071620190004</span>
                 </div>
                 
                 <div class="col-md-2">
-                    <span>Transaction ID:</span>
+                    <span class="font-bold">Transaction ID:</span>
                 </div>
                 
                 <div class="col-md-3">
@@ -37,18 +37,18 @@
             </div>
             <div class="row font-10">
                 <div class="col-md-2">
-                    <span>Name: </span>
+                    <span class="font-bold">Name: </span>
                 </div>
                 <div class="col-md-3">
                     <span id="txn-patient-name">John Mark D Dosejo</span>
                 </div>
 
                 <div class="col-md-2">
-                    <span>Date:</span>
+                    <span class="font-bold">Date:</span>
                 </div>
                 
                 <div class="col-md-3">
-                    <span>{{ date('Y-m-d') }}</span>
+                    <span id="txn-date">{{ date('Y-m-d') }}</span>
                 </div>
             </div>
 

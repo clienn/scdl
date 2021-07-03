@@ -1,4 +1,4 @@
-<table id="tbl-results-list" class="tbl-results table tb-style-1 table-sm table-hover table-borderless">
+<table id="tbl-results-archive" class="tbl-results table tb-style-1 table-sm table-hover table-borderless">
     <thead>
         <tr class="font-lime font-bold">
             <th scope="col">Transaction ID</th>
@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody class="font-10">
-        @foreach($data as $item)
+        @foreach($archive as $item)
             <tr data-exams="{{ $item->exams }}" data-packages="{{ $item->packages }}">
                 <input type="hidden" value="{{ $item->exam_result }}" />
                 <td>

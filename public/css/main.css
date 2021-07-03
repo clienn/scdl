@@ -70,11 +70,16 @@ nav {
 .font-gray-1 { color: #888888; }
 .font-gray-2 { color: #D5D5D5; }
 .font-gray-3 { color: #8C8C8C; }
+.font-gray-4 { color: #707070; }
+
+.font-blue-1 { color: #4fafdb; }
+.font-red-1 { color: #f00; }
 
 .font-regular { font-family: 'WorkSansRegular'; }
 .font-bold { font-family: 'WorkSansBold'; }
 
 .font-8 { font-size: 8px; }
+.font-9 { font-size: 9px; }
 .font-10 { font-size: 10pt; }
 .font-12 { font-size: 12px; }
 .font-14 { font-size: 14px; }
@@ -93,6 +98,32 @@ nav {
 
 .nleft-70 { position:relative; left:-70px }
 
+#exam-panel .row {
+    padding: 5px 0 5px 0;
+}
+
+#exam-panel .row:hover {
+    background: #99CE34;
+    cursor: pointer;
+}
+
+.exam_type .row:not(:first-child):hover {
+    background: #99CE34;
+    cursor: pointer;
+}
+
+.border-lime-2 {
+    border: 2px solid #99CE34;
+}
+
+.rborder-white-3 {
+    border-right: 3px solid #fff;
+}
+
+select option[disabled] {
+    display: none;
+}
+
 #login-wrap .wrap {
     width: 100%;
     height: 100%;
@@ -107,10 +138,21 @@ nav {
     padding: 10px 20px 10px 20px;
     border: 1px solid #000;
 }
+.form-input-2 {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    border: 1px solid #000;
+}
 
 .form-select-1 {
     width: 100%;
     padding: 12px 20px 12px 20px;
+    border: 1px solid #000;
+}
+
+.form-select-2 {
+    width: 100%;
+    padding: 5px 20px 5px 20px;
     border: 1px solid #000;
 }
 
@@ -283,6 +325,10 @@ nav {
       padding: 25px 50px 25px 50px;
   }
 
+  .form-wrap-2 {
+    padding: 25px 0px 25px 50px;
+  }
+
   .menu {
       cursor: pointer;
   }
@@ -334,5 +380,14 @@ nav {
   }
 
   .table-hover tbody tr {
+    cursor: pointer;
+  }
+
+  .hide {
+      display: none;
+  }
+
+  .choice-remove:hover {
+    font-weight: bold;
     cursor: pointer;
   }

@@ -2,7 +2,7 @@
     <div class="search-panel panel-shadow">
         <div class="row d-flex justify-content-center">
             <div class="form-group col-md-10">
-                <input type="text" class="form-control form-rounded bg-gray-1" id="db-search" placeholder="Enter patient code, patient name, or company name">
+                <input type="text" class="form-control form-rounded bg-gray-1" id="db-search" placeholder="Enter search key">
             </div>
             <div class="form-group col-md-2">
                 

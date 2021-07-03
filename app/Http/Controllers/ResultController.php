@@ -3,6 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\CashieringTransaction;
+use App\Patient;
+use App\Exam;
+use App\ExamCategory;
+use App\ExamType;
+use App\Package;
+use App\PackageExam;
+use App\Result;
 
 class ResultController extends Controller
 {
@@ -13,165 +21,202 @@ class ResultController extends Controller
      */
     public function index()
     {
-        // $data = [
-        //     ['Fasting Blood Sugar', ''],
-        //     ['Total Cholesterol', ''],
-        //     ['Triglycerides', ''],
-        //     ['HDL (Good Cholesterol', ''],
-        //     ['LDL (Bad Cholesterol', ''],
-        //     ['Uric Acid', ''],
-        //     ['Creatinine', ''],
-        //     ['Blood Urea Nitrogen', ''],
-        //     ['SGOT', ''],
-        //     ['SGPT', ''],
-        //     ['HBa1c', ''],
+        $data = CashieringTransaction::select('cashiering_transactions.*', 'results.exam_result', 
+            'patients.lastname', 'patients.firstname', 'patients.middlename')
+            ->leftjoin('patients', 'patients.id', '=', 'cashiering_transactions.patient_id')
+            ->leftjoin('results', 'results.cashiering_transaction_id', '=', 'cashiering_transactions.id')
+            ->where('cashiering_transactions.status', '<', 2)
+            // ->whereDate('cashiering_transactions.updated_at', '=', date('Y-m-d'))
+            ->groupBy('cashiering_transactions.patient_id')
+            ->orderBy('cashiering_transactions.id', 'desc')
+            ->get();
 
-        //     ['Blood Type', ''],
-        //     ['RH Type', ''],
+        $exams = Exam::select('exams.id', 'exams.name')->get();
+        $packages = Package::select('packages.id', 'packages.name')->get();
 
-        //     ['Troponin I', ''],
-        //     ['Troponin T', ''],
-        //     ['Myoglobin', ''],
-        //     ['Creatinine Kinase-(CK MB)', ''],
-        //     ['C-Reactive Protein', ''],
+        $completed = CashieringTransaction::select('cashiering_transactions.*', 'results.exam_result', 
+            'patients.lastname', 'patients.firstname', 'patients.middlename')
+            ->leftjoin('patients', 'patients.id', '=', 'cashiering_transactions.patient_id')
+            ->leftjoin('results', 'results.cashiering_transaction_id', '=', 'cashiering_transactions.id')
+            ->where('cashiering_transactions.status', '=', 2)
+            ->whereDate('cashiering_transactions.updated_at', '=', date('Y-m-d'))
+            ->groupBy('cashiering_transactions.patient_id')
+            ->orderBy('cashiering_transactions.id', 'desc')
+            ->get();
 
-        //     ['HBsAg (Qualitative)', ''],
-        //     ['HBsAg (Quantitative)', ''],
-        //     ['Anti-Hbs (Quantitative)', ''],
-        //     ['HBeAg', ''],
-        //     ['Anti-Hbe', ''],
-        //     ['Anti-Hbc IgM', ''],
-        //     ['Anti-Hbc IgG', ''],
-        //     ['HAV IgG HAV IgM', ''],
-        //     ['Anti HCV-IgM', ''],
+        $archive = CashieringTransaction::select('cashiering_transactions.*', 'results.exam_result', 
+            'patients.lastname', 'patients.firstname', 'patients.middlename')
+            ->leftjoin('patients', 'patients.id', '=', 'cashiering_transactions.patient_id')
+            ->leftjoin('results', 'results.cashiering_transaction_id', '=', 'cashiering_transactions.id')
+            // ->where('cashiering_transactions.status', '=', 2)
+            ->whereDate('cashiering_transactions.updated_at', '<', date('Y-m-d'))
+            ->groupBy('cashiering_transactions.patient_id')
+            ->orderBy('cashiering_transactions.id', 'desc')
+            ->get();
+        
+        return view('layouts.results', ['data' => $data, 'completed_list' => $completed, 'archive' => $archive,
+            'exams' => $exams, 'packages' => $packages]);
+    }
 
-        //     ['Sodium', ''],
-        //     ['Potassium', ''],
-        //     ['Calcium', ''],
-        //     ['Chloride', ''],
-        //     ['Phosporous', ''],
-        //     ['Magnesium', ''],
-        //     ['Others: Serum Osmolality', ''],
-        //     ['Lithium', ''],
+    public function getPatientResults($id) {
+        $data = CashieringTransaction::select('cashiering_transactions.*', 'results.exam_result', 
+            'patients.lastname', 'patients.firstname', 'patients.middlename')
+            ->leftjoin('patients', 'patients.id', '=', 'cashiering_transactions.patient_id')
+            ->leftjoin('results', 'results.cashiering_transaction_id', '=', 'cashiering_transactions.id')
+            ->where('patients.id', '=', $id)
+            // ->whereDate('cashiering_transactions.updated_at', '=', date('Y-m-d'))
+            // ->groupBy('cashiering_transactions.patient_id')
+            ->orderBy('cashiering_transactions.id', 'desc')
+            ->get();
 
-        //     ['Lacto Dehydrogenase (LDH)', ''],
-        //     ['Gamma Glutamyl Transferase', ''],
-        //     ['Amylase', ''],
-        //     ['Lipase', ''],
-        //     ['Cholinesterase', ''],
-        //     ['SGPT/ALT', ''],
-        //     ['SGOT/AST', ''],
-        //     ['Creatinine Kinase', ''],
-        //     ['Alkaline Phospatase', ''],
+        $exams = Exam::select('exams.id', 'exams.name')->get();
+        $packages = Package::select('packages.id', 'packages.name')->get();
+        
+        return view('layouts.results-patient', ['data' => $data, 'exams' => $exams, 'packages' => $packages]);
+    }
 
-        //     ['Ascaris', ''],
-        //     ['Hookworm ova', ''],
-        //     ['Blastosistis Hominis', ''],
-        //     ['Gardia Lambia', ''],
-        //     ['S. Stercoralis Larva', ''],
-        //     ['Trichuris ova', ''],
-        //     ['Tapeworm', ''],
-        //     ['Entamoeba cyst', ''],
-        //     ['Entamoeba trophozoite', ''],
-        //     ['Schistosoma ova', ''],
-        //     ['Puss cells', ''],
-        //     ['Red Blood Cells', ''],
-        //     ['Fat Globules', ''],
-        //     ['Yeast Cells', ''],
-        //     ['Undigested Food', ''],
-        // ];
+    public function getForm(Request $request) {
+        $id = $request->query('id');
+        $key = $request->query('key');
 
-        // $tests = [
-        //     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // bloodchem standard
-        //     [11, 12], // blood type
-        //     [13, 14, 15, 16, 17], // cardiac markers
-        //     [18, 19, 20, 21, 22, 23, 24, 25, 26], // complete hepatits profile
-        //     [18, 19, 20, 21, 22, 23, 24, 25, 26], // electrolytes
-        //     [27, 28, 29, 30, 31, 32, 33, 34], // electrolytes
-        //     [35, 36, 37, 38, 39, 40, 41, 42, 43], // enzyme test
-        //     [35, 36, 37, 38, 39, 40, 41, 42, 43], // fecalysis
-        // ];
+        if ($key == 'e') {
+            $exam_types = $this->getExamTypes($id);
 
-        $blood_chem_executive = [
-            ['Fasting', '6.5 - 8.5 g/dL'],
-            ['Total Cholesterol', '6.5 - 8.5 g/dL'],
-            ['Triglycerides', '3.0 - 3.5'],
-            ['HDL (Good Cholesterol)', '3.0 - 3.5'],
-            ['LDL (Bad Cholesterol)', '3.0 - 3.5'],
-            ['Uric Acid', '3.0 - 3.5'],
-            ['Creatinine', '3.0 - 3.5'],
-            ['Blood Urea Nitrogen', '3.0 - 3.5'],
-            ['SGOT', '3.0 - 3.5'],
-            ['SGPT', '3.0 - 3.5'],
-            ['Sodium', '3.0 - 3.5'],
-            ['Potassium', '3.0 - 3.5'],
-            ['Calcium', '3.0 - 3.5'],
-            ['Magnesium', '3.0 - 3.5'],
-            ['Phosphorous', '3.0 - 3.5'],
-            ['Chloride', '3.0 - 3.5']
-        ];
+            if (count($exam_types) > 0) {
+                return response(['data' => json_encode($exam_types), 'success' => true]);
+            }
+        } else if ($key == 'p') {
+            $package_exams = PackageExam::select('package_exams.exam_id', 'packages.name', 'exams.name as exam_name')
+                ->leftjoin('packages', 'packages.id', '=', 'package_exams.package_id')
+                ->leftjoin('exams', 'exams.id', '=', 'package_exams.exam_id')
+                ->where('package_exams.package_id', $id)->get();
 
-        $blood_chem_full = [
-            ['Fasting Blood Sugar', '6.5 - 8.5 g/dL'],
-            ['Total Cholesterol', '6.5 - 8.5 g/dL'],
-            ['Triglycerides', '3.0 - 3.5'],
-            ['HDL (Good Cholesterol)', '3.0 - 3.5'],
-            ['LDL (Bad Cholesterol)', '3.0 - 3.5'],
-            ['Uric Acid', '3.0 - 3.5'],
-            ['Creatinine', '3.0 - 3.5'],
-            ['Blood Urea Nitrogen', '3.0 - 3.5'],
-            ['SGOT', '3.0 - 3.5'],
-            ['SGPT', '3.0 - 3.5'],
+            $data = [];
 
-            ['Alkaline Phosphatase', '3.0 - 3.5'],
-            ['Total Protein', '3.0 - 3.5'],
-            ['Albumin', '3.0 - 3.5'],
-            ['Globulin', '3.0 - 3.5'],
-            ['A/G Ratio', '3.0 - 3.5'],
-            ['Total Bilirubin', '3.0 - 3.5'],
-            ['Direct Bilirubin', '3.0 - 3.5'],
+            foreach ($package_exams as $package) {
+                $data[$package->exam_name] = [$this->getExamTypes($package->exam_id), $package->exam_id];
+            }
 
-            ['Sodium', '3.0 - 3.5'],
-            ['Potassium', '3.0 - 3.5'],
-            ['Calcium', '3.0 - 3.5'],
-            ['Magnesium', '3.0 - 3.5'],
-            ['Phosphorous', '3.0 - 3.5']
-        ];
+            return response(['data' => json_encode($data), 'success' => true]);
+        }
 
-        $blood_chem_standard = [
-            ['Fasting Blood Sugar', '6.5 - 8.5 g/dL'],
-            ['Total Cholesterol', '6.5 - 8.5 g/dL'],
-            ['Triglycerides', '3.0 - 3.5'],
-            ['HDL (Good Cholesterol)', '3.0 - 3.5'],
-            ['LDL (Bad Cholesterol)', '3.0 - 3.5'],
-            ['Uric Acid', '3.0 - 3.5'],
-            ['Creatinine', '3.0 - 3.5'],
-            ['Blood Urea Nitrogen', '3.0 - 3.5'],
-            ['SGOT', '3.0 - 3.5'],
-            ['SGPT', '3.0 - 3.5'],
-            ['HBa1c', '3.0 - 3.5']
-        ];
+        return response(['success' => false]);
+    }
 
-        $blood_chem = [
-            ['Total Protein', '6.5 - 8.5 g/dL'],
-            ['Albumin', '6.5 - 8.5 g/dL'],
-            ['Globulim', '3.0 - 3.5']
-        ];
+    private function getExamTypes($id) {
+        $q = Exam::select('exams.exam_type_ids')
+            // ->leftjoin('exam_categories', 'exam_categories.id', '=', 'exams.exam_category_id')
+            ->where('exams.id', $id)->first();
 
-        $tibc_ferritin = [
-            ['Ferritin', '6.5 - 8.5 g/dL'],
-            ['Iron', '6.5 - 8.5 g/dL'],
-            ['Total Iron Binding Capacity (TIBC)', '3.0 - 3.5'],
-            ['Unsaturated Iron Binding Capacity', '3.0 - 3.5']
-        ];
+        if ($q) {
+            $ids = explode(",", $q->exam_type_ids);
 
-        return view('layouts.results',  [
-            'blood_chem_executive' => $blood_chem_executive,
-            'blood_chem_full' => $blood_chem_full,
-            'blood_chem_standard' => $blood_chem_standard,
-            'blood_chem' => $blood_chem,
-            'tibc_ferritin' => $tibc_ferritin,
-        ]);
+            $exam_types = ExamType::select('exam_types.*')
+                ->whereIn('exam_types.id', $ids)
+                ->get();
+
+            return $exam_types;
+        }
+
+        return [];
+    }
+
+    private function isTestComplete($id, $results) { // cashiering id
+        $flag = false;
+
+        $q = CashieringTransaction::select('cashiering_transactions.id', 
+            'cashiering_transactions.exams', 'cashiering_transactions.packages')
+            ->where('cashiering_transactions.id', $id)->first();
+
+        if ($q) {
+            $exams = $q->exams ? explode(',', $q->exams) : [];
+            $packages = $q->packages ? explode(',', $q->packages) : [];
+
+            if (count($exams) > 0) {
+                $flag = $this->validateTestResults($exams, $results, 'e');
+            }
+            
+            if ($flag && count($packages) > 0) {
+                foreach($packages as $p) {
+                    $pq = Package::select('package_exams.exam_id')
+                        ->leftjoin('package_exams', 'package_exams.package_id', '=', 'packages.id')
+                        ->where('packages.id', $p)
+                        ->get();
+                        
+                    $exam_ids = [];
+                    foreach($pq as $val) {
+                        $exam_ids[] = $val->exam_id;
+                    }
+
+                    $flag = $this->validateTestResults($exam_ids, $results['p' . $p], '');
+                }
+            }
+        }
+
+        return $flag;
+    }
+
+    public function test() {
+        // $pq = Package::select('package_exams.exam_id')
+        //     ->leftjoin('package_exams', 'package_exams.package_id', '=', 'packages.id')
+        //     ->where('packages.id', 1)
+        //     ->get();
+
+        // var_dump($pq);
+        // $results = json_decode('{"e1":{"1":"","2":"2","3":"1"},"p1":{"10":{"85":"YELLOWISH BROWN","86":"1","87":"222","88":"3","89":"3","90":"3","91":"3","92":"3","93":"3","94":"3","95":"3","96":"3","97":"3","98":"3","99":"3","100":"3","101":"3","102":"4"},"11":{"103":"123","104":"123","105":"123","106":"1","107":"2","108":"3","109":"5","110":"4","111":"2"},"12":{"112":"Yellow","113":"2","114":"2","115":"2","116":"2","117":"33333","118":"3","119":"3","120":"3","121":"3","122":"3"}}}', true);
+        // var_dump($results);
+
+        // $r = Result::select('results.*')->where('results.cashiering_transaction_id', 10)->first();
+
+        // $flag = false;
+
+        // if ($r) {
+        //     $exam_type = 'p1';
+        //     // $results = json_decode('{"e1":{"1":"","2":"2","3":"1"}}', true);
+        //     $results = json_decode('{"p1":{"10":{"85":"YELLOWISH BROWN","86":"","87":"222","88":"3","89":"3","90":"3","91":"3","92":"3","93":"3","94":"3","95":"3","96":"3","97":"3","98":"3","99":"3","100":"3","101":"3","102":"4"},"11":{"103":"123","104":"123","105":"123","106":"1","107":"2","108":"3","109":"5","110":"4","111":"2"},"12":{"112":"Yellow","113":"2","114":"2","115":"2","116":"2","117":"33333","118":"3","119":"3","120":"3","121":"3","122":"3"}}}', true);
+        //     $exam_result = json_decode($r->exam_result, true);
+        //     $exam_result[$exam_type] = $results[$exam_type];
+
+        //     // $r->exam_result = json_encode($exam_result);
+        //     var_dump($exam_result);
+
+        //     $flag = $this->isTestComplete($r->cashiering_transaction_id, $exam_result);
+        // }
+        // // $r = $this->isTestComplete(10, $results);
+        // var_dump($flag);
+
+        $ct = CashieringTransaction::select('cashiering_transactions.*')
+            ->where('cashiering_transactions.id', 10)->first();
+
+        if ($ct) {
+            $ct->status = 1;
+            $ct->save();
+        }
+    }
+
+    private function validateTestResults($exams, $results, $prefix) {
+        
+        if (count($results) > 0) {
+            $q = Exam::select('exams.id', 'exams.exam_type_ids')
+                ->leftjoin('exam_categories', 'exam_categories.id', '=', 'exams.exam_category_id')
+                ->whereIn('exams.id', $exams)
+                ->get();
+
+            foreach ($q as $item) {
+                $exam_types = explode(',', $item->exam_type_ids);
+
+                foreach($exam_types as $type) {
+                    // echo $prefix . $item->id . '<br />';
+                    if ($results[$prefix . $item->id][$type] == "") {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public function list()
@@ -197,7 +242,44 @@ class ResultController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $results = $request->input('results');
+        $exam_type = $request->input('exam_type');
+
+        $r = Result::select('results.*')->where('results.cashiering_transaction_id', $id)->first();
+
+        $flag = false;
+
+        if ($r) {
+            $results = json_decode($results, true);
+            $exam_result = json_decode($r->exam_result, true);
+            $exam_result[$exam_type] = $results[$exam_type];
+
+            $r->exam_result = json_encode($exam_result);
+
+            $flag = $this->isTestComplete($r->cashiering_transaction_id, $exam_result);
+            $flag = $flag ? 2 : 1;
+        } else {
+            $r = new Result;
+            $r->cashiering_transaction_id = $id;
+            $r->exam_result = $results;
+        }
+
+        if ($r->save()) {
+            if ($results) {
+                $ct = CashieringTransaction::select('cashiering_transactions.*')
+                ->where('cashiering_transactions.id', $id)->first();
+
+                if ($ct) {
+                    $ct->status = $flag;
+                    $ct->save();
+                }
+            }
+            
+            return response(['data' => $r->exam_result, 'status' => $flag, 'success' => true]);
+        }
+
+        return response(['success' => false]);
     }
 
     /**

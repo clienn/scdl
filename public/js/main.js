@@ -41,6 +41,7 @@ function initAddItems(selTable, modalTable, modalId, paginationId, pageUrl, base
 
 function checkSelectedExams(selTable, modalTable) {
     let ids = [];
+    
     $('#' + selTable + ' input[type="checkbox"]').each(function() {
         ids[$(this).val()] = $(this).is(':checked');
     });
@@ -121,7 +122,7 @@ function initAjaxPagination(paginationId, modalTable, baseUrl, pageUrl, search_i
             
                         $.get(ajax_url, function(data) {
                             $('#' + modalTable).html(data);
-                            // if (callback) callback();
+                            if (callback) callback();
                         });
                     }
                 }

@@ -143,6 +143,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#examinationReportTab" aria-controls="examinationReportTab" role="tab" data-toggle="tab">III. X-Ray, ECG and Laboratory Examination Report</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#evaluationReportTab" aria-controls="evaluationReportTab" role="tab" data-toggle="tab">Medical Evaluation</a>
+                        </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -156,6 +159,9 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="examinationReportTab">
                                 @include('partials.doctors_form.lab-exam-report')
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="evaluationReportTab">
+                                @include('partials.doctors_form.medical-evaluation')
                             </div>
                         </div>
                     </div>
@@ -187,7 +193,7 @@
             </div>
 
             <div class="col-md-12 flex-column d-flex font-20 mt-5">
-                <span>Recommendations</span>
+                <span>Decision/Recommendation</span>
             </div>
             <div class="row mt-4">
                 <div class="col-md-11">

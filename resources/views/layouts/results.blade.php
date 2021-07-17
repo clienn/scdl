@@ -93,10 +93,10 @@
                         <span class="font-15 font-black-2 font-bold">Type of Examination</span>
                     </div>
                     <div class="col-md-4 text-center">
-                        <span class="font-15 font-black-2 font-bold">Results</span>
+                        <span class="font-15 font-black-2 font-bold">Normal Values</span>
                     </div>
                     <div class="col-md-4 text-center">
-                        <span class="font-15 font-black-2 font-bold">Normal Values</span>
+                        <span class="font-15 font-black-2 font-bold">Results</span>
                     </div>
                 </div>
                 <div class="row mt-2 font-10">
@@ -393,7 +393,7 @@
             let bg = (c++ & 1) ? 'bg-gray-1' : '';
             html += '<div class="row mt-1 ' + bg + '">';
             html += '<div class="col-md-4 mt-1">' + data[k].description + '</div>';
-            html += '<div class="col-md-4 text-center mt-1">' + data[k].normal_values.replace('~', '<br />') + '</div>';
+            html += '<div class="col-md-4 text-center mt-1">' + (data[k].normal_values ? data[k].normal_values.replace('~', '<br />') : '') + '</div>';
             
             let result = '';
 
